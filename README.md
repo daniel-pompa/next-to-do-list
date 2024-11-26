@@ -107,7 +107,7 @@ After completing the installation and environment setup, you can start the appli
 
 ### Running the Application in Development Mode
 
-1. **Start the PostgreSQL Database**
+1. Start the PostgreSQL database
 
 Ensure Docker is installed and running, then launch the PostgreSQL container using the following command:
 
@@ -115,11 +115,11 @@ Ensure Docker is installed and running, then launch the PostgreSQL container usi
 docker compose up -d
 ```
 
-2. Configure Environment Variables
+2. Configure environment variables
 
 Rename the `.env.template` file to `.env` and update the environment variables to match your local setup or project requirements.
 
-3. Prepare the Database
+3. Prepare the database
 
 Use Prisma to initialize and migrate the database schema, and generate the required client:
 
@@ -129,13 +129,13 @@ npx prisma migrate dev
 npx prisma generate
 ```
 
-4. Seed the Database
+4. Seed the database
 
 Populate the local database by running the seed script. Trigger the seed endpoint using an API testing tool like Postman or directly in your browser:
 
 [Execute Seed Script](http://localhost:3000/api/seed)
 
-5. Start the Development Server
+5. Start the development server
 
 Launch the app in development mode:
 
