@@ -1,36 +1,180 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# To-Do List
 
-## Getting Started
+A modern, fully responsive To-Do List app designed for efficiency and ease of use. It allows users to quickly organize their tasks by easily creating, updating, and deleting them. With an intuitive and smooth interface, the app provides a practical solution for managing both personal and professional activities. It ensures a seamless experience with real-time updates and a clean, user-friendly design.
 
-First, run the development server:
+## Table of Contents
+
+- [Requirements](#requirements)
+- [Technology Stack](#technology-stack)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Author](#author)
+
+## Requirements
+
+You need to have the following installed:
+
+A source code editor such as [VSCode](https://code.visualstudio.com/), [Sublime Text](https://www.sublimetext.com/), or any other editor of your choice.
+
+[![NodeJS](https://img.shields.io/badge/Node.js-6DA55F.svg?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/en)
+[![npm](https://img.shields.io/badge/npm-%23CB3837.svg?style=flat&logo=npm&logoColor=white)](https://www.npmjs.com/)
+
+> [!NOTE]
+> Clicking on the Node.js badge will take you to the Node.js website, where you can download the installer. It is recommended to use the stable version. When you install Node.js, npm will be installed automatically.
+
+Check your Node.js and npm installation by running:
+
+```bash
+node --version
+npm --version
+```
+
+## Technology Stack
+
+This project utilizes the following technologies:
+
+<p>
+  <a href="#"><img src="https://skillicons.dev/icons?i=next" width="40" height="40" alt="Next.js" /></a>
+  <a href="#"><img src="https://skillicons.dev/icons?i=react" width="40" height="40" alt="React" /></a>
+  <a href="#"><img src="https://skillicons.dev/icons?i=ts" width="40" height="40" alt="TypeScript" /></a>
+  <a href="#"><img src="https://skillicons.dev/icons?i=tailwind" width="40" height="40" alt="Tailwind CSS" /></a>
+  <a href="#"><img src="https://skillicons.dev/icons?i=docker" width="40" height="40" alt="Docker" /></a>
+  <a href="#"><img src="https://skillicons.dev/icons?i=prisma" width="40" height="40" alt="Prisma" /></a>
+  <a href="#"><img src="https://skillicons.dev/icons?i=postgres" width="40" height="40" alt="PostgreSQL" /></a>
+</p>
+
+## Project Structure
+
+```bash
+├───📁 prisma/
+│   ├───📁 migrations/
+│   └───📄 schema.prisma
+├───📁 public/
+├───📁 src/
+│   ├───📁 app/
+│   │   ├───📁 api/
+│   │   │   └───📁 seed/
+│   │   ├───📁 fonts/
+│   │   ├───📄 favicon.ico
+│   │   ├───📄 globals.css
+│   │   ├───📄 layout.tsx
+│   │   └───📄 page.tsx
+│   └───📁 lib/
+├───📄 .env.template
+├───📄 .eslintrc.json
+├───📄 docker-compose.yml
+├───📄 LICENSE
+├───📄 next.config.ts
+├───📄 package-lock.json
+├───📄 package.json
+├───📄 postcss.config.mjs
+├───📄 README.md
+├───📄 tailwind.config.ts
+└───📄 tsconfig.json
+```
+
+> [!NOTE]
+> This section will be updated once the project structure is finalized.
+
+## Installation
+
+To set up the project locally, follow these steps:
+
+1. **Clone the repository:**
+
+```bash
+git clone https://github.com/daniel-pompa/next-to-do-list.git
+```
+
+2. **Navigate to the project directory:**
+
+```bash
+cd next-to-do-list
+```
+
+3. **Install dependencies:**
+
+```bash
+npm install
+```
+
+## Usage
+
+After completing the installation and environment setup, you can start the application for development or production use. Follow the steps below to get started:
+
+### Running the Application in Development Mode
+
+1. **Start the PostgreSQL Database**
+
+Ensure Docker is installed and running, then launch the PostgreSQL container using the following command:
+
+```bash
+docker compose up -d
+```
+
+2. Configure Environment Variables
+
+Rename the `.env.template` file to `.env` and update the environment variables to match your local setup or project requirements.
+
+3. Prepare the Database
+
+Use Prisma to initialize and migrate the database schema, and generate the required client:
+
+```bash
+npx prisma init
+npx prisma migrate dev
+npx prisma generate
+```
+
+4. Seed the Database
+
+Populate the local database by running the seed script. Trigger the seed endpoint using an API testing tool like Postman or directly in your browser:
+
+[Execute Seed Script](http://localhost:3000/api/seed)
+
+5. Start the Development Server
+
+Launch the app in development mode:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> [!NOTE]
+> The server will typically run on <http://localhost:3000>, but check the output on your terminal to be sure.
+> For troubleshooting, ensure Docker, Node.js, and the dependencies are correctly installed. Verify that the `.env` configuration matches your setup.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Contributing
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Contributions from the community are greatly appreciated. To contribute, please follow the steps below
 
-## Learn More
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Make your changes.
+4. Commit your changes (`git commit -am 'add new feature'`).
+5. Push to the branch (`git push origin feature-branch`).
+6. Create a new Pull Request.
 
-To learn more about Next.js, take a look at the following resources:
+**Code Standards**  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Before submitting a pull request, please ensure your code follows the project's coding standards. We use [ESLint](https://eslint.org/) and [Prettier](https://prettier.io/) to maintain code consistency and readability. Please run these tools before submitting.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
+This project is licensed under the MIT License.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+[![MIT License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://choosealicense.com/licenses/mit/)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> [!NOTE]
+> Clicking on the MIT License badge to see the LICENSE file for details.
+
+## Author
+
+This project is maintained and developed by **Daniel Pompa Pareja**.
+
+For any questions or suggestions, feel free to reach out via [email](mailto:daniel.40.pompa@gmail.com).
+
+[Back to Top](#table-of-contents)
