@@ -1,3 +1,4 @@
+'use client';
 import { IoCheckboxOutline, IoSquareOutline } from 'react-icons/io5';
 import { Task } from '@prisma/client';
 import styles from './TodoItem.module.css';
@@ -5,9 +6,10 @@ import { format } from 'date-fns';
 
 interface TaskItemProps {
   task: Task;
+  onToggleComplete: (id: string, complete: boolean) => Promise<Task | void>;
 }
 
-export const TaskItem = ({ task }: TaskItemProps) => {
+export const TaskItem = ({ task, onToggleComplete }: TaskItemProps) => {
   // Format date
   const formattedDate = format(new Date(task.createdAt), 'yyyy-MM-dd HH:mm');
 
@@ -18,6 +20,7 @@ export const TaskItem = ({ task }: TaskItemProps) => {
       } mt-5`}
     >
       <div
+        onClick={() => onToggleComplete(task.id, !task.complete)}
         className={`${styles['task-icon']} ${
           task.complete ? styles['task-icon-done'] : styles['task-icon-pending']
         } cursor-pointer`}
