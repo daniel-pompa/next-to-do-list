@@ -16,7 +16,7 @@ export const SidebarMenuItem = ({ path, title }: SidebarMenuItemProps) => {
     <Link
       href={path}
       className={`
-            px-4 py-3 flex items-center space-x-4 rounded-md hover:bg-slate-800 hover:text-white
+            px-4 py-3 flex items-center space-x-4 rounded-md hover:bg-slate-800 hover:text-white transition-all duration-300 ease-in-out
             ${
               currentPath === path
                 ? 'text-white bg-slate-800'

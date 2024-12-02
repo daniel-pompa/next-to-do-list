@@ -41,7 +41,7 @@ export const Sidebar = () => {
             priority
             className='w-28 h-28 m-auto rounded-full object-cover'
           />
-          <h5 className='mt-4 text-xl text-slate-600 lg:block'>John Doe</h5>
+          <h5 className='mt-4 text-xl lg:block'>John Doe</h5>
           <span className='text-slate-500 lg:block'>Admin</span>
         </div>
         <nav className='mt-8 space-y-3'>
