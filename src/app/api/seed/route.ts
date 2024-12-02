@@ -6,36 +6,41 @@ export async function GET() {
     // Delete all existing todos
     await prisma.task.deleteMany();
     // Create new todo items
-    const tasks = await prisma.task.createMany({
-      data: [
-        {
-          title: 'Master Next.js Basics',
-          description: 'Learn routing, pages, and server-side rendering.',
-        },
-        {
-          title: 'Get Proficient in TypeScript',
-          description:
-            'Understand types, interfaces, and classes to improve code safety.',
-          complete: false,
-        },
-        {
-          title: 'Build UIs with Tailwind CSS',
-          description: "Create responsive designs with Tailwind's utility classes.",
-        },
-        {
-          title: 'Work with Prisma ORM',
-          description: 'Use Prisma for type-safe database interactions.',
-        },
-        {
-          title: 'Set Up PostgreSQL with Docker',
-          description: 'Run PostgreSQL locally using Docker containers.',
-        },
-        {
-          title: 'Build Full-Stack with Next.js and PostgreSQL',
-          description: 'Develop full-stack an app integrating Next.js and PostgreSQL.',
-        },
-      ],
-    });
+   const tasks = await prisma.task.createMany({
+     data: [
+       {
+         title: 'Next.js Fundamentals',
+         description:
+           'Master routing, pages, and rendering in Next.js for efficient development.',
+       },
+       {
+         title: 'TypeScript Proficiency',
+         description:
+           'Enhance your coding skills with strong typing, interfaces, and classes.',
+         complete: true,
+       },
+       {
+         title: 'UI Design with Tailwind CSS',
+         description:
+           'Build responsive, mobile-first user interfaces using Tailwind CSS.',
+       },
+       {
+         title: 'Database Managemetn with Prisma',
+         description:
+           'Integrate Prisma ORM for robust and type-safe database operations.',
+       },
+       {
+         title: 'PostgreSQL with Docker',
+         description:
+           'Set up and run PostgreSQL databases using Docker for local development.',
+       },
+       {
+         title: 'Full-Stack Development',
+         description:
+           'Build a full-stack application connecting Next.js with a PostgreSQL database.',
+       },
+     ],
+   });
     console.log(tasks);
     return NextResponse.json({ message: 'Seed executed successfully' });
   } catch (error: unknown) {
