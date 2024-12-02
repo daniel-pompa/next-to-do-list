@@ -37,11 +37,13 @@ export const PUT = async (request: Request, { params }: Segments) => {
   }
   try {
     // Validate the request body using the updateTaskSchema
-    const { title, description } = await updateTaskSchema.validate(await request.json());
+    const { title, description, complete } = await updateTaskSchema.validate(
+      await request.json()
+    );
     // Update the task in the database
     const updatedTask = await prisma.task.update({
       where: { id: params.id },
-      data: { title, description },
+      data: { title, description, complete },
     });
     return NextResponse.json(updatedTask); // Return the updated task
   } catch (error) {
