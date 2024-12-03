@@ -1,20 +1,31 @@
 'use client';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Task } from '@prisma/client';
-import { TaskItem } from './TaskItem';
-import * as taskUtils from '@/tasks';
+import { TaskItem, EditTaskModal } from '@/tasks';
+import * as taskUtils from '@/tasks/utils/tasks';
 
 interface TasksGridProps {
   tasks?: Task[];
 }
 
 export const TasksGrid = ({ tasks = [] }: TasksGridProps) => {
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const router = useRouter();
 
   const toggleTaskComplete = async (id: string, complete: boolean) => {
     const task = await taskUtils.toggleComplete(id, complete);
     router.refresh();
     return task;
+  };
+
+  const handleEdit = (task: Task) => {
+    setSelectedTask(task); // Set the selected task for editing
+  };
+
+  const handleDelete = async (id: string) => {
+    await taskUtils.deleteTask(id); // Call the delete task function
+    router.refresh(); // Refresh to update the task list
   };
 
   if (!tasks.length) {
@@ -29,10 +40,25 @@ export const TasksGrid = ({ tasks = [] }: TasksGridProps) => {
   }
 
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
-      {tasks.map(task => (
-        <TaskItem key={task.id} task={task} onToggleComplete={toggleTaskComplete} />
-      ))}
-    </div>
+    <>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+        {tasks.map(task => (
+          <TaskItem
+            key={task.id}
+            task={task}
+            onToggleComplete={toggleTaskComplete}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        ))}
+      </div>
+
+      {selectedTask && (
+        <EditTaskModal
+          task={selectedTask}
+          onClose={() => setSelectedTask(null)} // Close the modal
+        />
+      )}
+    </>
   );
 };
