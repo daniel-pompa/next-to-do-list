@@ -4,9 +4,9 @@ import { updateTaskSchema } from '@/schemas/task';
 import { NextResponse } from 'next/server';
 
 interface Segments {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 // Centralized error handling function
@@ -19,49 +19,46 @@ const handleError = (error: unknown) => {
 
 // Fetch a single task by ID - GET /api/tasks/:id
 export const GET = async (request: Request, { params }: Segments) => {
-  // Try to get the task using the provided ID
-  const task = await getTask(params.id);
-  // If no task is found, return a 404 response
+  const urlParams = await params; // Await the promise to get the parameters
+  const task = await getTask(urlParams.id); // Use urlParams.id to fetch the task
   if (!task) {
     return NextResponse.json({ error: 'Task not found' }, { status: 404 });
   }
-  // If task exists, return the task
   return NextResponse.json(task);
 };
 
 // Update a task by ID - PUT /api/tasks/:id
 export const PUT = async (request: Request, { params }: Segments) => {
-  const task = await getTask(params.id); // Retrieve the task using the provided ID
+  const urlParams = await params; // Await the promise to get the parameters
+  const task = await getTask(urlParams.id); // Use urlParams.id to fetch the task
   if (!task) {
-    return NextResponse.json({ error: 'Task not found' }, { status: 404 }); // If task is not found, return 404
+    return NextResponse.json({ error: 'Task not found' }, { status: 404 });
   }
   try {
-    // Validate the request body using the updateTaskSchema
     const { title, description, complete } = await updateTaskSchema.validate(
       await request.json()
     );
-    // Update the task in the database
     const updatedTask = await prisma.task.update({
-      where: { id: params.id },
+      where: { id: urlParams.id },
       data: { title, description, complete },
     });
-    return NextResponse.json(updatedTask); // Return the updated task
+    return NextResponse.json(updatedTask);
   } catch (error) {
-    return NextResponse.json(handleError(error), { status: 400 }); // If validation fails, return 400
+    return NextResponse.json(handleError(error), { status: 400 });
   }
 };
 
 // Delete a task by ID - DELETE /api/tasks/:id
 export const DELETE = async (request: Request, { params }: Segments) => {
-  const task = await getTask(params.id); // Ensure the task exists
+  const urlParams = await params; // Await the promise to get the parameters
+  const task = await getTask(urlParams.id); // Ensure the task exists
   if (!task) {
-    return NextResponse.json({ error: 'Task not found' }, { status: 404 }); // If task is not found, return 404
+    return NextResponse.json({ error: 'Task not found' }, { status: 404 });
   }
   try {
-    // Delete the task from the database
-    await prisma.task.delete({ where: { id: params.id } });
-    return NextResponse.json({ message: 'Task deleted successfully' }); // Confirm the task was deleted
+    await prisma.task.delete({ where: { id: urlParams.id } });
+    return NextResponse.json({ message: 'Task deleted successfully' });
   } catch (error) {
-    return NextResponse.json(handleError(error), { status: 500 }); // If an error occurs during deletion, return 500
+    return NextResponse.json(handleError(error), { status: 500 });
   }
 };
