@@ -2,53 +2,81 @@ import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { createTaskSchema } from '@/schemas/task';
 
-// Fetch all tasks with or without pagination - GET /api/tasks
+// Fetch tasks with optional pagination - GET /api/tasks
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
 
-    const take = Number(searchParams.get('take') || '0'); // 0 to get all
-    const skip = Number(searchParams.get('skip') || '0');
+    // Parse pagination parameters
+    const take = parseInt(searchParams.get('take') || '10', 10); // Default: 10 items
+    const skip = parseInt(searchParams.get('skip') || '0', 10); // Default: 0 offset
 
-    if (isNaN(take)) {
+    if (isNaN(take) || take < 0) {
       return NextResponse.json(
-        { error: 'Invalid take parameter value. It must be a number.' },
+        { error: 'Invalid "take" parameter. It must be a positive number.' },
         { status: 400 }
       );
     }
 
-    if (isNaN(skip)) {
+    if (isNaN(skip) || skip < 0) {
       return NextResponse.json(
-        { error: 'Invalid skip parameter value. It must be a number.' },
+        { error: 'Invalid "skip" parameter. It must be a positive number.' },
         { status: 400 }
       );
     }
 
-    // Fetch all tasks to get counts
-    const tasks = await prisma.task.findMany();
-    const totalTasks = tasks.length;
-    const completedCount = tasks.filter(task => task.complete).length;
-    const pendingCount = tasks.filter(task => !task.complete).length;
+    // Fetch paginated tasks
+    const tasks = await prisma.task.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: take > 0 ? take : undefined, // Take only if greater than 0
+      skip,
+    });
 
-    return NextResponse.json({ totalTasks, completedCount, pendingCount });
+    // Fetch task statistics
+    const [totalTasks, completedCount] = await prisma.$transaction([
+      prisma.task.count(), // Total tasks
+      prisma.task.count({ where: { complete: true } }), // Completed tasks
+    ]);
+    const pendingCount = totalTasks - completedCount;
+
+    // Respond with tasks and metadata
+    return NextResponse.json({
+      tasks,
+      totalTasks,
+      completedCount,
+      pendingCount,
+    });
   } catch (error) {
     console.error('Error fetching tasks:', error);
-    return NextResponse.json({ error: 'Error fetching tasks' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'An unexpected error occurred while fetching tasks.' },
+      { status: 500 }
+    );
   }
 }
 
 // Create a new task - POST /api/tasks
 export async function POST(request: Request) {
   try {
-    // Validate the request body against the schema
+    // Validate request body against the schema
     const { title, description, complete } = await createTaskSchema.validate(
       await request.json()
     );
-    // Create a new task in the database
-    const task = await prisma.task.create({ data: { title, description, complete } });
-    return NextResponse.json(task);
+
+    // Create the new task
+    const task = await prisma.task.create({
+      data: { title, description, complete },
+    });
+
+    // Respond with the created task
+    return NextResponse.json(task, { status: 201 });
   } catch (error) {
-    // Handle validation errors or unexpected exceptions
-    return NextResponse.json(error, { status: 400 });
+    console.error('Error creating task:', error);
+
+    // Handle validation or unexpected errors
+    return NextResponse.json(
+      { error: 'Failed to create task. Check your input and try again.' },
+      { status: 400 }
+    );
   }
 }
