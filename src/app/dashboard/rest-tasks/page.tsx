@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import prisma from '@/lib/prisma';
-import { TasksGrid } from '@/tasks';
+import { CreateTaskButton, DeleteCompletedTasksButton, TasksGrid } from '@/tasks';
 
 export const metadata: Metadata = {
   title: 'Task List - REST API',
@@ -11,10 +11,25 @@ export const metadata: Metadata = {
 export default async function RestTasksPage() {
   const tasks = await prisma.task.findMany({ orderBy: { createdAt: 'desc' } });
 
+  if (!tasks) {
+    return (
+      <p className='mt-3 text-slate-500 text-lg sm:text-xl'>
+        No tasks found, please create a new task.
+      </p>
+    );
+  }
+
   return (
     <div className='px-6 pt-6'>
-      {/* TODO: Add form to create a new task */}
-      <h1 className='text-2xl'>Task List - REST API</h1>
+      <div className='flex flex-col sm:flex-row gap-4 items-center justify-end'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 items-end w-full sm:w-auto'>
+          {/* Create task button */}
+          <CreateTaskButton />
+          {/* Delete completed tasks button */}
+          <DeleteCompletedTasksButton />
+        </div>
+      </div>
+      <h1 className='text-2xl mt-8 sm:mt-0'>Task List - REST API</h1>
       <TasksGrid tasks={tasks} />
     </div>
   );

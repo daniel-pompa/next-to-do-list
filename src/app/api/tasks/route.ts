@@ -39,7 +39,7 @@ export async function GET(request: Request) {
     ]);
     const pendingCount = totalTasks - completedCount;
 
-    // Respond with tasks and metadata
+    // Responds with tasks data and counts
     return NextResponse.json({
       tasks,
       totalTasks,
@@ -77,6 +77,22 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: 'Failed to create task. Check your input and try again.' },
       { status: 400 }
+    );
+  }
+}
+
+// Delete completed tasks - DELETE /api/tasks
+export async function DELETE() {
+  try {
+    // Delete all tasks
+    await prisma.task.deleteMany({ where: { complete: true } });
+    // Respond with success message
+    return NextResponse.json({ message: 'All completed tasks deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting tasks:', error);
+    return NextResponse.json(
+      { error: 'An unexpected error occurred while deleting tasks.' },
+      { status: 500 }
     );
   }
 }
