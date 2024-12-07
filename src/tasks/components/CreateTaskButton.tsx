@@ -14,7 +14,7 @@ export const CreateTaskButton = () => {
       <button
         type='button'
         onClick={handleOpenModal}
-        className='w-full px-4 py-3 mt-4 sm:mt-0 bg-blue-500 text-white rounded hover:bg-blue-600 transition-all text-sm sm:text-base flex items-center justify-center'
+        className='w-full px-4 py-3 bg-blue-500 text-white rounded hover:bg-blue-600 transition-all text-sm sm:text-base flex items-center justify-center'
       >
         <IoAddCircleOutline size={20} className='mr-2' />
         Create task
