@@ -1,9 +1,6 @@
 import { Sidebar, TopMenu } from '@/components';
 import prisma from '@/lib/prisma';
 
-// Revalidate every 60 seconds to enable Incremental Static Regeneration (ISR)
-export const revalidate = 60;
-
 export default async function DashboardLayout({
   children,
 }: {
