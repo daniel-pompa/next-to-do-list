@@ -36,7 +36,7 @@ export const WidgetItem = () => {
 
   return (
     <div className='md:col-span-2 lg:col-span-1'>
-      <div className='h-full p-4 space-y-4 rounded-xl border border-slate-200 bg-white'>
+      <div className='h-full p-4 space-y-4 rounded-md border border-slate-200 shadow-lg'>
         <h5 className='text-2xl text-center'>Task Overview</h5>
         <div className='flex flex-col items-center space-y-4'>
           {isLoading ? (
