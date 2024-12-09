@@ -29,6 +29,7 @@ export const TopMenu = ({ totalTasks, completedCount, pendingCount }: TopMenuPro
         '/dashboard': 'Dashboard',
         '/dashboard/rest-tasks': 'REST API',
         '/dashboard/server-tasks': 'Server Actions',
+        '/dashboard/profile': 'Profile',
       } as Record<Pathname, string>),
     []
   );
