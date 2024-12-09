@@ -1,7 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { getServerSession } from 'next-auth';
 import { SiNextdotjs } from 'react-icons/si';
 import { CiLogout } from 'react-icons/ci';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { SidebarMenuItem } from './SidebarMenuItem';
 
 const menuItems = [
@@ -19,7 +21,12 @@ const menuItems = [
   },
 ];
 
-export const Sidebar = () => {
+export const Sidebar = async () => {
+  const session = await getServerSession(authOptions);
+
+  const avatarUrl = session?.user?.image ? session?.user?.image : '/avatar.png';
+  const userName = session?.user?.name || 'John Doe';
+
   return (
     <aside
       id='sidebar'
@@ -34,14 +41,14 @@ export const Sidebar = () => {
         </div>
         <div className='mt-6 text-center'>
           <Image
-            src='/avatar.png'
+            src={avatarUrl}
             alt='avatar'
             width={100}
             height={100}
             priority
             className='w-28 h-28 m-auto rounded-full object-cover'
           />
-          <h5 className='mt-4 text-xl lg:block'>John Doe</h5>
+          <h5 className='mt-4 text-xl lg:block'>{userName}</h5>
           <span className='text-slate-500 lg:block'>Admin</span>
         </div>
         <nav className='mt-8 space-y-3'>
