@@ -1,11 +1,15 @@
 import { Sidebar, TopMenu } from '@/components';
 import prisma from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(authOptions);
+
   // Fetches task data from the database
   async function getTaskData() {
     try {
@@ -35,7 +39,7 @@ export default async function DashboardLayout({
 
   return (
     <>
-      <Sidebar />
+      <Sidebar session={session} />
       <div className='ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%] min-h-screen'>
         <TopMenu
           totalTasks={totalTasks}

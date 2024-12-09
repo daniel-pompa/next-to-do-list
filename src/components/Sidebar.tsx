@@ -1,9 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { getServerSession } from 'next-auth';
+import { Session } from 'next-auth';
 import { SiNextdotjs } from 'react-icons/si';
 import { CiLogout } from 'react-icons/ci';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { SidebarMenuItem } from './SidebarMenuItem';
 
 const menuItems = [
@@ -19,11 +18,17 @@ const menuItems = [
     path: '/dashboard/server-tasks',
     title: 'Server Actions',
   },
+  {
+    path: '/dashboard/profile',
+    title: 'Profile',
+  },
 ];
 
-export const Sidebar = async () => {
-  const session = await getServerSession(authOptions);
+interface SidebarProps {
+  session: Session | null;
+}
 
+export const Sidebar = ({ session }: SidebarProps) => {
   const avatarUrl = session?.user?.image ? session?.user?.image : '/avatar.png';
   const userName = session?.user?.name || 'John Doe';
 
