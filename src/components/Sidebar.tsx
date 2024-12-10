@@ -2,8 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Session } from 'next-auth';
 import { SiNextdotjs } from 'react-icons/si';
-import { CiLogout } from 'react-icons/ci';
 import { SidebarMenuItem } from './SidebarMenuItem';
+import { LogoutButton } from './LogoutButton';
 
 const menuItems = [
   {
@@ -63,10 +63,7 @@ export const Sidebar = ({ session }: SidebarProps) => {
         </nav>
       </div>
       <div className='px-6 -mx-6 pt-4 flex justify-between items-center border-t'>
-        <button className='px-4 py-3 flex items-center space-x-4 rounded-md text-slate-600 group'>
-          <CiLogout size={20} />
-          <span className='group-hover:text-slate-700'>Logout</span>
-        </button>
+        <LogoutButton />
       </div>
     </aside>
   );
