@@ -27,10 +27,18 @@ export default function ProfilePage() {
             />
           </div>
           <h3 className='text-xl'>Account Information</h3>
-          <div>
+          <div className='space-y-1'>
             <div className='space-x-1'>
               <span>Username:</span>
               <span className='text-slate-500'>{session?.user?.name ?? 'John Doe'}</span>
+            </div>
+            <div className='space-x-1'>
+              <span>Roles:</span>
+              <span className='text-slate-500'>
+                {session?.user?.roles && session.user.roles.length > 0
+                  ? session.user.roles.join(', ')
+                  : 'user'}
+              </span>
             </div>
             <div className='space-x-1'>
               <span>Email:</span>

@@ -31,6 +31,7 @@ interface SidebarProps {
 export const Sidebar = ({ session }: SidebarProps) => {
   const avatarUrl = session?.user?.image ? session?.user?.image : '/avatar.png';
   const userName = session?.user?.name || 'John Doe';
+  const userRoles = session?.user?.roles || ['user'];
 
   return (
     <aside
@@ -54,7 +55,7 @@ export const Sidebar = ({ session }: SidebarProps) => {
             className='w-28 h-28 m-auto rounded-full object-cover'
           />
           <h5 className='mt-4 text-xl lg:block'>{userName}</h5>
-          <span className='text-slate-500 lg:block'>Admin</span>
+          <span className='text-slate-500 lg:block'>{userRoles.join(', ')}</span>
         </div>
         <nav className='mt-8 space-y-3'>
           {menuItems.map(item => (
