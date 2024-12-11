@@ -1,5 +1,6 @@
-import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
+import prisma from '@/lib/prisma';
 
 export async function GET() {
   try {
@@ -11,8 +12,8 @@ export async function GET() {
       data: {
         name: 'John Doe',
         email: 'john.doe@example.com',
-        password: 'J0hnD03!',
-        roles: ['admin'],
+        password: bcrypt.hashSync('J0hnD03!', 10),
+        roles: ['admin', 'user'],
         tasks: {
           create: [
             {
