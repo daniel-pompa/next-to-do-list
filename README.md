@@ -55,18 +55,41 @@ This project utilizes the following technologies:
 ├───📁 src/
 │   ├───📁 app/
 │   │   ├───📁 api/
-│   │   │   └───📁 seed/
+│   │   │   ├───📁 auth/
+│   │   │   ├───📁 seed/
+│   │   │   └───📁 tasks/
+│   │   │       ├───📁 [id]/
+│   │   │       └───📄 route.ts
+│   │   ├───📁 dashboard/
+│   │   │   ├───📁 profile/
+│   │   │   ├───📁 rest-tasks/
+│   │   │   ├───📁 server-tasks/
+│   │   │   ├───📄 layout.tsx
+│   │   │   └───📄 page.tsx
 │   │   ├───📁 fonts/
 │   │   ├───📄 favicon.ico
 │   │   ├───📄 globals.css
 │   │   ├───📄 layout.tsx
 │   │   └───📄 page.tsx
-│   └───📁 lib/
+│   ├───📁 auth/
+│   │   ├───📁 actions/
+│   │   ├───📁 components/
+│   │   └───📄 index.ts
+│   ├───📁 components/
+│   ├───📁 lib/
+│   ├───📁 schemas/
+│   └───📁 tasks/
+│       ├───📁 actions/
+│       ├───📁 components/
+│       ├───📁 interfaces/
+│       ├───📁 utils/
+│       └───📄 index.ts
 ├───📄 .env.template
 ├───📄 .eslintrc.json
 ├───📄 docker-compose.yml
 ├───📄 LICENSE
 ├───📄 next.config.ts
+├───📄 nextauth.d.ts
 ├───📄 package-lock.json
 ├───📄 package.json
 ├───📄 postcss.config.mjs
@@ -74,9 +97,6 @@ This project utilizes the following technologies:
 ├───📄 tailwind.config.ts
 └───📄 tsconfig.json
 ```
-
-> [!NOTE]
-> This section will be updated once the project structure is finalized.
 
 ## Installation
 
@@ -155,8 +175,8 @@ Ensure the Prisma client reflects the latest schema. This step is required for d
 npx prisma generate
 ```
 
-> [!NOTE]
-> Before running these commands, verify that the DATABASE_URL in the `.env` file is correct.
+> [!TIP]
+> Verify that the Prisma client has been generated correctly before continuing to seed the database. If you encounter any issues, check the terminal to ensure no errors occurred during this process. Before running these commands, verify that the DATABASE_URL in the .env file is correct.
 
 4. Start the development server
 
@@ -167,17 +187,21 @@ npm run dev
 ```
 
 > [!NOTE]
-> The server will typically run on <http://localhost:3000>, but check the output on your terminal to be sure.
-> For troubleshooting, ensure Docker, Node.js, and the dependencies are correctly installed. Verify that the `.env` configuration matches your setup.
+> The server will typically run on <http://localhost:3000>, but check the output on your terminal to be sure. For troubleshooting, ensure Docker, Node.js, and the dependencies are correctly installed. Verify that the .env configuration matches your setup.
 
 5. Seed the database
+
+> [!TIP]
+> Use this step only after confirming that the application server is running and the database is properly configured.
 
 Populate the local database by running the seed script. Trigger the seed endpoint using an API testing tool like Postman or directly in your browser:
 
 [Execute Seed Script](http://localhost:3000/api/seed)
 
-> [!TIP]
-> Use this step only after confirming that the application server is running and the database is properly configured.
+> [!NOTE]
+> Default User Credentials
+> email: <john.doe@example.com>
+> password: J0hnD03!
 
 6. Troubleshooting
 
