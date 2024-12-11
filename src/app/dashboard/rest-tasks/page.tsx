@@ -1,7 +1,9 @@
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import prisma from '@/lib/prisma';
+import { getUserServerSession } from '@/auth/actions/auth-actions';
 import { CreateTaskButton, DeleteCompletedTasksButton, TasksGrid } from '@/tasks';
 
 export const metadata: Metadata = {
@@ -11,7 +13,16 @@ export const metadata: Metadata = {
 };
 
 export default async function RestTasksPage() {
-  const tasks = await prisma.task.findMany({ orderBy: { createdAt: 'desc' } });
+  const user = await getUserServerSession();
+
+  if (!user) {
+    redirect('/api/auth/signin');
+  }
+
+  const tasks = await prisma.task.findMany({
+    where: { userId: user.id },
+    orderBy: { updatedAt: 'desc' },
+  });
 
   if (!tasks) {
     return (
