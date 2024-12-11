@@ -1,4 +1,5 @@
 'use client';
+import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { createTask } from '../actions/task-actions';
 
@@ -12,9 +13,12 @@ export const CreateTaskModalServerActions = ({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
+  const { data: session } = useSession();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createTask(title, description);
+    if (!session?.user?.id) return null;
+    await createTask(title, description, session?.user?.id);
     onClose();
   };
 

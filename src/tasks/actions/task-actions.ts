@@ -17,9 +17,13 @@ export const toggleTask = async (id: string, complete: boolean): Promise<Task> =
   return updatedTask;
 };
 
-export const createTask = async (title: string, description: string): Promise<Task> => {
+export const createTask = async (
+  title: string,
+  description: string,
+  userId: string
+): Promise<Task> => {
   const task = await prisma.task.create({
-    data: { title, description },
+    data: { title, description, userId },
   });
   revalidatePath('/dashboard/server-tasks');
   return task;
