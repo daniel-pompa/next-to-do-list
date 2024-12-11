@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { createTaskSchema } from '@/schemas/task';
+import { getUserServerSession } from '@/auth/actions/auth-actions';
 
 // Fetch tasks with optional pagination - GET /api/tasks
 export async function GET(request: Request) {
@@ -57,6 +58,12 @@ export async function GET(request: Request) {
 
 // Create a new task - POST /api/tasks
 export async function POST(request: Request) {
+  const user = await getUserServerSession();
+
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     // Validate request body against the schema
     const { title, description, complete } = await createTaskSchema.validate(
@@ -65,7 +72,7 @@ export async function POST(request: Request) {
 
     // Create the new task
     const task = await prisma.task.create({
-      data: { title, description, complete },
+      data: { title, description, complete, userId: user.id },
     });
 
     // Respond with the created task
@@ -83,9 +90,15 @@ export async function POST(request: Request) {
 
 // Delete completed tasks - DELETE /api/tasks
 export async function DELETE() {
+  const user = await getUserServerSession();
+
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     // Delete all tasks
-    await prisma.task.deleteMany({ where: { complete: true } });
+    await prisma.task.deleteMany({ where: { complete: true, userId: user.id } });
     // Respond with success message
     return NextResponse.json({ message: 'All completed tasks deleted successfully' });
   } catch (error) {
