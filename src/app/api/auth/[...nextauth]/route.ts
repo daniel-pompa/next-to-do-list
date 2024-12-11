@@ -21,13 +21,13 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        username: { label: 'Email', type: 'email', placeholder: 'user@example.com' },
+        email: { label: 'Email', type: 'email', placeholder: 'user@example.com' },
         password: { label: 'Password', type: 'password', placeholder: '********' },
       },
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
         const user = await signInWithCredentials(
-          credentials!.username,
+          credentials!.email,
           credentials!.password
         );
 
