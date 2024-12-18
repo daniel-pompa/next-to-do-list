@@ -1,4 +1,5 @@
 'use server';
+import { getUserServerSession } from '@/auth/actions/auth-actions';
 import prisma from '@/lib/prisma';
 import { Task } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
@@ -53,6 +54,12 @@ export const deleteTask = async (id: string): Promise<void> => {
 };
 
 export const deleteCompletedTasks = async (): Promise<void> => {
-  await prisma.task.deleteMany({ where: { complete: true } });
+  const user = await getUserServerSession();
+  if (!user?.id) {
+    throw new Error('Unauthorized');
+  }
+  await prisma.task.deleteMany({
+    where: { complete: true, userId: user.id },
+  });
   revalidatePath('/dashboard/server-tasks');
 };
