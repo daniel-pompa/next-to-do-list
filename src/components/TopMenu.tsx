@@ -1,6 +1,6 @@
 'use client';
+import { useState, useMemo, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
 import {
   AiOutlineAppstore,
   AiOutlineCheckCircle,
@@ -16,25 +16,29 @@ interface TopMenuProps {
 
 export const TopMenu = ({ totalTasks, completedCount, pendingCount }: TopMenuProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [currentTitle, setCurrentTitle] = useState<string>('Dashboard');
+  const [currentTitle, setCurrentTitle] = useState('Dashboard');
   const pathname = usePathname();
 
   // Define the type for valid route paths
   type Pathname = '/dashboard' | '/dashboard/rest-tasks' | '/dashboard/server-tasks';
 
-  // Memoize the titles object to ensure it's not recreated on every render
+  // Route titles
   const titles = useMemo(
-    () =>
-      ({
-        '/dashboard': 'Dashboard',
-        '/dashboard/rest-tasks': 'REST API',
-        '/dashboard/server-tasks': 'Server Actions',
-        '/dashboard/profile': 'Profile',
-      } as Record<Pathname, string>),
+    () => ({
+      '/dashboard': 'Dashboard',
+      '/dashboard/rest-tasks': 'REST API',
+      '/dashboard/server-tasks': 'Server Actions',
+      '/dashboard/profile': 'Profile',
+    }),
     []
   );
 
-  // Toggle the visibility of the sidebar
+  // Update the title based on the current route's pathname
+  useEffect(() => {
+    const currentPathname = pathname as Pathname;
+    setCurrentTitle(titles[currentPathname] || 'Dashboard');
+  }, [pathname, titles]); // Dependencies are stable due to useMemo
+
   const toggleSidebar = () => {
     const sidebarElement = document.getElementById('sidebar');
     if (sidebarElement) {
@@ -44,20 +48,12 @@ export const TopMenu = ({ totalTasks, completedCount, pendingCount }: TopMenuPro
     setIsSidebarOpen(prev => !prev);
   };
 
-  // Update the title based on the current route's pathname
-  useEffect(() => {
-    const currentPathname = pathname as Pathname;
-    setCurrentTitle(titles[currentPathname] || 'Dashboard');
-  }, [pathname, titles]); // Dependencies are stable due to useMemo
-
   return (
     <div className='sticky z-10 top-0 h-16 border-b bg-white lg:py-2.5'>
       <div className='px-6 flex items-center justify-between space-x-4'>
-        {/* Dynamic title displayed on the top bar */}
         <h5 hidden className='text-2xl text-slate-500 font-medium lg:block'>
           {currentTitle}
         </h5>
-        {/* Toggle button for the sidebar (visible on mobile) */}
         <button
           onClick={toggleSidebar}
           className='w-12 h-16 -mr-2 border-r lg:hidden'
@@ -66,7 +62,7 @@ export const TopMenu = ({ totalTasks, completedCount, pendingCount }: TopMenuPro
           {isSidebarOpen ? <FiX size={30} /> : <FiMenu size={30} />}
         </button>
         <div className='flex space-x-2'>
-          {/* Total number of tasks */}
+          {/* Total de tareas */}
           <button className='relative flex items-center justify-center w-10 h-10 rounded-lg border bg-slate-50 focus:bg-slate-100 active:bg-slate-200'>
             <AiOutlineAppstore size={25} className='text-blue-500' />
             {totalTasks > 0 && (
@@ -75,7 +71,7 @@ export const TopMenu = ({ totalTasks, completedCount, pendingCount }: TopMenuPro
               </span>
             )}
           </button>
-          {/* Number of completed tasks */}
+          {/* Tareas completadas */}
           <button className='relative flex items-center justify-center w-10 h-10 rounded-lg border bg-slate-50 focus:bg-slate-100 active:bg-slate-200'>
             <AiOutlineCheckCircle size={25} className='text-green-500' />
             {completedCount > 0 && (
@@ -84,7 +80,7 @@ export const TopMenu = ({ totalTasks, completedCount, pendingCount }: TopMenuPro
               </span>
             )}
           </button>
-          {/* Number of pending tasks */}
+          {/* Tareas pendientes */}
           <button className='relative flex items-center justify-center w-10 h-10 rounded-lg border bg-slate-50 focus:bg-slate-100 active:bg-slate-200'>
             <AiOutlineClockCircle size={25} className='text-red-500' />
             {pendingCount > 0 && (
