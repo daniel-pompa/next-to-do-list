@@ -5,42 +5,41 @@ import { getUserServerSession } from '@/auth/actions/auth-actions';
 
 // Fetch tasks with optional pagination - GET /api/tasks
 export async function GET(request: Request) {
+  const user = await getUserServerSession();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
 
     // Parse pagination parameters
-    const take = parseInt(searchParams.get('take') || '10', 10); // Default: 10 items
-    const skip = parseInt(searchParams.get('skip') || '0', 10); // Default: 0 offset
+    const take = parseInt(searchParams.get('take') || '10', 10);
+    const skip = parseInt(searchParams.get('skip') || '0', 10);
 
-    if (isNaN(take) || take < 0) {
+    if (isNaN(take) || take < 0 || isNaN(skip) || skip < 0) {
       return NextResponse.json(
-        { error: 'Invalid "take" parameter. It must be a positive number.' },
+        { error: 'Invalid pagination parameters.' },
         { status: 400 }
       );
     }
 
-    if (isNaN(skip) || skip < 0) {
-      return NextResponse.json(
-        { error: 'Invalid "skip" parameter. It must be a positive number.' },
-        { status: 400 }
-      );
-    }
-
-    // Fetch paginated tasks
+    // Fetch tasks filtered by userId
     const tasks = await prisma.task.findMany({
+      where: { userId: user.id },
       orderBy: { createdAt: 'desc' },
-      take: take > 0 ? take : undefined, // Take only if greater than 0
+      take: take > 0 ? take : undefined,
       skip,
     });
 
-    // Fetch task statistics
+    // Fetch task statistics filtered by userId
     const [totalTasks, completedCount] = await prisma.$transaction([
-      prisma.task.count(), // Total tasks
-      prisma.task.count({ where: { complete: true } }), // Completed tasks
+      prisma.task.count({ where: { userId: user.id } }),
+      prisma.task.count({ where: { userId: user.id, complete: true } }),
     ]);
     const pendingCount = totalTasks - completedCount;
 
-    // Responds with tasks data and counts
+    // Return user-specific task data
     return NextResponse.json({
       tasks,
       totalTasks,
