@@ -1,14 +1,9 @@
 'use client';
-import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 
 export default function ProfilePage() {
   const { data: session } = useSession();
-
-  useEffect(() => {
-    console.log('Profile page loaded');
-  }, []);
 
   return (
     <div className='px-6 pt-6 text-center'>
