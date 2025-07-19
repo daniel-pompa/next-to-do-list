@@ -12,28 +12,42 @@ export const getUserServerSession = async () => {
 export const signInWithCredentials = async (email: string, password: string) => {
   if (!email || !password) return null;
 
-  const user = await prisma.user.findUnique({ where: { email } });
+  let user = await prisma.user.findUnique({ where: { email } });
 
+  // Automatically create user if not found
   if (!user) {
-    const dbUser = await createUser(email, password);
-    return dbUser;
+    const hashedPassword = bcrypt.hashSync(password, 10);
+
+    user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        name: email.split('@')[0],
+        roles: ['user'],
+        isActive: true,
+      },
+    });
   }
 
-  if (bcrypt.compareSync(password, user.password ?? '')) {
+  if (!user || !user.password) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('❌ User not found');
+    }
     return null;
   }
 
-  return user;
-};
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('❌ Invalid password');
+    }
+    return null;
+  }
 
-const createUser = async (email: string, password: string) => {
-  const user = await prisma.user.create({
-    data: {
-      email,
-      password: bcrypt.hashSync(password, 10),
-      name: email.split('@')[0],
-    },
-  });
-
-  return user;
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    roles: user.roles,
+  };
 };
