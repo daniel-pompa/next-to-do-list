@@ -8,7 +8,7 @@ export async function GET() {
     await prisma.task.deleteMany();
     await prisma.user.deleteMany();
 
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: {
         name: 'John Doe',
         email: 'john.doe@example.com',

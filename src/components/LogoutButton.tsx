@@ -4,8 +4,9 @@ import { RiLogoutCircleLine, RiLogoutCircleRLine } from 'react-icons/ri';
 import { FaSpinner } from 'react-icons/fa';
 
 export const LogoutButton = () => {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
+  // Show spinner while session is loading
   if (status === 'loading') {
     return (
       <button className='px-4 py-3 flex items-center space-x-4 rounded-md text-slate-600 group'>
@@ -15,6 +16,7 @@ export const LogoutButton = () => {
     );
   }
 
+  // If unauthenticated, show sign-in button
   if (status === 'unauthenticated') {
     return (
       <button
@@ -27,6 +29,7 @@ export const LogoutButton = () => {
     );
   }
 
+  // If authenticated, show sign-out button
   return (
     <button
       className='px-4 py-3 flex items-center space-x-2 rounded-md text-slate-600 group'

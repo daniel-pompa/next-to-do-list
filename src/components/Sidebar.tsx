@@ -54,7 +54,7 @@ export const Sidebar = ({ session }: SidebarProps) => {
             priority
             className='w-28 h-28 m-auto rounded-full object-cover'
           />
-          <h5 className='mt-4 text-xl lg:block'>{userName}</h5>
+          <h5 className='mt-4 text-xl lg:block capitalize'>{userName}</h5>
           <span className='text-slate-500 lg:block'>{userRoles.join(', ')}</span>
         </div>
         <nav className='mt-8 space-y-3'>

@@ -1,7 +1,7 @@
 import { Sidebar, TopMenu } from '@/components';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth.config';
 import { getTaskCountsByUserId } from '@/lib/task';
 
 export default async function DashboardLayout({
