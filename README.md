@@ -194,14 +194,35 @@ npm run dev
 > [!TIP]
 > Use this step only after confirming that the application server is running and the database is properly configured.
 
-Populate the local database by running the seed script. Trigger the seed endpoint using an API testing tool like Postman or directly in your browser:
+Populate the local database with default user and task data. You can choose one of the following methods:
+
+**Option 1: Trigger the seed endpoint**
+
+You can seed the database by triggering the API endpoint manually using a browser or an API tool like Postman:
 
 [Execute Seed Script](http://localhost:3000/api/seed)
 
+This method is useful when testing the app through its HTTP layer or deploying seed logic that’s integrated with your API routes.
+
+**Option 2: Use Prisma CLI**
+
+Alternatively, you can use Prisma's CLI to execute the seed script directly:
+
+```bash
+npx prisma db seed
+```
+
+This command runs the `prisma/seed.ts` script defined in your `package.json` file.
+
 > [!NOTE]
-> Default User Credentials
-> email: <john.doe@example.com>
-> password: J0hnD03!
+> The seed script `prisma/seed.ts` truncates all relevant tables and populates the database with one default user and several predefined tasks. It uses `bcryptjs` to securely hash the user's password before insertion.
+>
+> Default user credentials:  
+>
+> - Email: `john.doe@example.com`  
+> - Password: `J0hnD03!`  
+>
+> Use these credentials to sign in during development.
 
 6. Troubleshooting
 
